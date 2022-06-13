@@ -4,13 +4,19 @@
   "description": "Linda Anderssons Kunskapskontroll 3 Webbserver & Databaser ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "dev": "nodemon server"
   },
   "keywords": [],
-  "author": "",
+  "author": "Linda Anderrson",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.1",
+    "moment": "^2.29.3",
     "socket.io": "^4.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }
