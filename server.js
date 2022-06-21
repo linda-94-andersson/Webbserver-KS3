@@ -5,9 +5,13 @@ const socketio = require("socket.io");
 const formatMessage = require("./utils/messages");
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require("./utils/users");
 
+const logger = require("./middlewares/logger");
+
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+
+app.use(logger);
 
 app.use(express.static(path.join(__dirname, 'view')));
 
