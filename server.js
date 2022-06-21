@@ -2,15 +2,16 @@ const express = require("express");
 const path = require("path");
 const http = require("http");
 const socketio = require("socket.io");
+const cors = require("cors");
 const formatMessage = require("./utils/messages");
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require("./utils/users");
-
 const logger = require("./middlewares/logger");
 
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
+app.use(cors());
 app.use(logger);
 
 app.use(express.static(path.join(__dirname, 'view')));
@@ -50,6 +51,6 @@ io.on("connection", socket => {
     });
 });
 
-const PORT = 3000 || process.env.PORT;
+const PORT = 5000 || process.env.PORT;
 
 server.listen(PORT, () => console.log(`Server runing on port http://localhost:${PORT}/`));
