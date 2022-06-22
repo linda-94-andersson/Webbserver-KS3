@@ -4,7 +4,7 @@ const roomsStmt = `
 CREATE TABLE IF NOT EXISTS rooms 
 (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    room TEXT NOT NULL UNIQUE
+    room TEXT UNIQUE
 )
 `;
 
@@ -12,7 +12,7 @@ const usersStmt = `
 CREATE TABLE IF NOT EXISTS users
 (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL UNIQUE
+    username TEXT UNIQUE
 )
 `;
 
