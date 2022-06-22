@@ -1,22 +1,21 @@
 const express = require("express");
+const app = express();
 const path = require("path");
 const http = require("http");
+const server = http.createServer(app);
 const socketio = require("socket.io");
+const io = socketio(server);
 const cors = require("cors");
+
 const formatMessage = require("./utils/messages");
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require("./utils/users");
 const logger = require("./middlewares/logger");
 
-const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
 
 app.use(cors());
 app.use(logger);
 
 app.use(express.static(path.join(__dirname, 'view')));
-
-const admin = "Admin";
 
 io.on("connection", socket => {
     socket.on("joinRoom", ({ username, room }) => {
@@ -24,9 +23,9 @@ io.on("connection", socket => {
 
         socket.join(user.room);
 
-        socket.emit("message", formatMessage(admin, "Welcome to ChatCod!"));
+        socket.emit("message", formatMessage("Admin", "Welcome to THECHAT!"));
 
-        socket.broadcast.to(user.room).emit("message", formatMessage(admin, `${user.username} has joined the chat`));
+        socket.broadcast.to(user.room).emit("message", formatMessage("Admin", `${user.username} has joined the chat`));
 
         io.to(user.room).emit("roomUsers", {
             room: user.room,
@@ -42,7 +41,7 @@ io.on("connection", socket => {
     socket.on("disconnect", () => {
         const user = userLeave(socket.id);
         if (user) {
-            io.to(user.room).emit("message", formatMessage(admin, `${user.username} has left the chat`));
+            io.to(user.room).emit("message", formatMessage("Admin", `${user.username} has left the chat`));
             io.to(user.room).emit("roomUsers", {
                 room: user.room,
                 users: getRoomUsers(user.room)
