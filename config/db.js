@@ -3,7 +3,7 @@ const sqlite3 = require("sqlite3").verbose();
 const roomsStmt = `
 CREATE TABLE IF NOT EXISTS rooms 
 (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id TEXT PRIMARY KEY,
     room TEXT UNIQUE
 )
 `;
@@ -11,15 +11,15 @@ CREATE TABLE IF NOT EXISTS rooms
 const usersStmt = `
 CREATE TABLE IF NOT EXISTS users
 (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE
+    id TEXT PRIMARY KEY,
+    username TEXT
 )
 `;
 
 const messagesStmt = `
 CREATE TABLE IF NOT EXISTS messages
 (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id TEXT PRIMARY KEY,
     message TEXT NOT NULL,
     id_room INTEGER,
     id_user INTEGER,
