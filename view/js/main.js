@@ -7,11 +7,15 @@ const { username, room } = Qs.parse(location.search, {
     ignoreQueryPrefix: true,
 });
 
-const socket = io();
+console.log(username, room, " this is url parmas");
+
+const socket = io("http://localhost:5000/");
 
 socket.emit("joinRoom", { username, room });
 
 socket.on("roomUsers", ({ room, users }) => {
+    console.log(room, " this is undefined room");
+    console.log(users, " this is users in roomUsers");
     outputRoomName(room);
     outputUsers(users);
 });
@@ -47,6 +51,6 @@ function outputRoomName(room) {
 
 function outputUsers(users) {
     userList.innerHTML = `
-    ${users.map(user => `<li>${user.username}</li>`).join("")}
+    ${Array.from(users).map(user => `<li>${user.username}</li>`).join("")}
     `;
 }
