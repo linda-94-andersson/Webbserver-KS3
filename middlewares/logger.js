@@ -17,14 +17,14 @@ function logger(req, res, next) {
     const durationInMilliseconds = getActualRequestDurationInMilliseconds(start);
 
     res.on("finish", () => {
-        //when res or req?
-        const room = req.room;
-        const user = req.user;
-        const msg = res.message;
+        //How to target msg? why dose it work first and then not? 
+        const room = req.query.room; //params dosent work
+        const user = req.query.username;
+        const msg = req.body;
 
         const log = `
         [${chalk.blue(formatted_date)}]
-        ${room} - (${chalk.green(user)}): ${msg}
+        Room: ${room} - User: (${chalk.green(user)}): ${msg}
         ${chalk.red(durationInMilliseconds.toLocaleString() + "ms")}
         `;
 
@@ -36,6 +36,7 @@ function logger(req, res, next) {
             }
         });
     });
+    console.log(req.query.username, req.query.room, " this is req.query in logger"); 
     next();
 }
 
