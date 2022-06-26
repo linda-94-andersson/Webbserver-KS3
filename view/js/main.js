@@ -9,7 +9,7 @@ const { username, room } = Qs.parse(location.search, {
 
 console.log(username, room, " this is url parmas");
 
-const socket = io("http://localhost:5000/");
+const socket = io("http://localhost:5000/", { autoConnect: false });
 
 socket.emit("joinRoom", { username, room });
 
@@ -47,10 +47,12 @@ function outputMessage(message) {
 
 function outputRoomName(room) {
     roomName.innerText = room;
+    return room;
 }
 
 function outputUsers(users) {
     userList.innerHTML = `
     ${Array.from(users).map(user => `<li>${user.username}</li>`).join("")}
     `;
+    return users;
 }
