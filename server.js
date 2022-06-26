@@ -3,19 +3,21 @@ const app = express();
 const path = require("path");
 const http = require("http");
 const server = http.createServer(app);
-const socketio = require("socket.io");
-const io = socketio(server);
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 
-// const { Server } = require("socket.io");
-// const io = new Server(server, {
-//     cors: {
-//         origin: "*",
-//         methods: ["GET", "POST", "DELETE"]
-//     }
-// });
+// Old server io setup
+// const socketio = require("socket.io");
+// const io = socketio(server);
+
+const { Server } = require("socket.io");
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST", "DELETE"]
+    }
+});
 
 const logger = require("./middlewares/logger");
 const formatMessage = require("./utils/messages");
@@ -27,7 +29,7 @@ app.use(bodyParser.json());
 app.use(logger);
 app.use(morgan("dev"));
 
-app.use(express.static(path.join(__dirname, 'view')));
+// app.use(express.static(path.join(__dirname, 'view')));
 
 io.on("connection", socket => {
     socket.on("joinRoom", ({ username, room }) => {
@@ -37,6 +39,7 @@ io.on("connection", socket => {
         const roomName = getRoom(socket.id);
 
         socket.join(newUser.username, newRoom.room);
+        //socket.leave(room); 
 
         socket.emit("message", formatMessage("Admin", "Welcome to THECHAT!"));
 
@@ -66,7 +69,12 @@ io.on("connection", socket => {
             });
         }
     });
+    
+    socket.on("error", (error) => {
+        console.error(error, " this is io error");
+    });
 });
+
 
 const PORT = 5000 || process.env.PORT;
 
