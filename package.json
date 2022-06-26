@@ -2,7 +2,7 @@
   "name": "webbserver-ks3",
   "version": "1.0.0",
   "description": "Linda Anderssons Kunskapskontroll 3 Webbserver & Databaser ",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
@@ -12,11 +12,18 @@
   "author": "Linda Anderrson",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.0",
+    "chalk": "4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "md5": "^2.3.0",
     "moment": "^2.29.3",
-    "socket.io": "^4.5.1"
+    "socket.io": "^4.5.1",
+    "sqlite3": "^5.0.8"
   },
   "devDependencies": {
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "morgan": "^1.10.0"
   }
 }

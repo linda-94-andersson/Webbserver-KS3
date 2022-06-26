@@ -11,9 +11,9 @@
 * Den ska ha stöd för flera chatt-rum (X)
 * Man ska kunna skapa och ta bort chattrum ()
 * När man tar bort ett chattrum ska även dess meddelande tas bort ()
-* Chattrum som skapas ska ha unika namn ()
+* Chattrum som skapas ska ha unika namn (X)
 * Varje meddelande ska ha info om vem som skrev det och när (X)
-* Den ska innehålla en middleware som sparar loggar med relevant info i en eller enskilda filer (tidsstämpel, vem som skrev det, i vilken kanal) ()
+* Den ska innehålla en middleware som sparar loggar med relevant info i en eller enskilda filer (tidsstämpel, vem som skrev det, i vilken kanal) (X)
 * Den ska validera meddelande på backenden så att en användare inte kan skicka ett tomt meddelande ()
 
 ## För att uppnå Väl Godkänt är kraven att behöver du implementera minst 3 av följande kriterier:

@@ -1,1 +1,7 @@
 node_modules/
+
+*db.sqlite
+
+*request_logs.txt
+
+view/
