@@ -4,7 +4,7 @@ function createRoom(id, room) {
     const sql = "INSERT INTO rooms (id, room) VALUES (?,?)";
 
     return new Promise((resolve, reject) => {
-        db.run(sql, [id, room], (error, rooms) => {
+        db.run(sql, [id, room], function (error, rooms) {
             if (error) {
                 console.error(error.message);
                 reject(error);
@@ -18,7 +18,7 @@ function getOneRoom(id) {
     const sql = "SELECT * FROM rooms WHERE id = ?";
 
     return new Promise((resolve, reject) => {
-        db.get(sql, id, function (error, room) {
+        db.get(sql, id, (error, room) => {
             if (error) {
                 console.error(error.message);
                 reject(error);

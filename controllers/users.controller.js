@@ -12,6 +12,7 @@ async function userJoin(req, res) {
     try {
         const result = await userModel.createUser(req, res);
         console.log(result, " this is userJoin result");
+        return result;
     } catch (error) {
         return console.log("User could not be created");
     }
@@ -23,6 +24,7 @@ async function getCurrentUser(req, res) {
     if (!result) {
         return console.log("Could not get current user");
     }
+    return result; 
 }
 
 async function userLeave(req, res) {
@@ -31,6 +33,7 @@ async function userLeave(req, res) {
     if (!result) {
         return console.log("User could not leave :/");
     }
+    return result; 
 }
 
 module.exports = {

@@ -13,6 +13,7 @@ async function roomJoin(req, res) {
     try {
         const result = await roomModel.createRoom(req, res);
         console.log(result, " this is roomJoin result");
+        return result; 
     } catch (error) {
         return console.log("Room could not be created");
     }
@@ -24,6 +25,7 @@ async function getRoom(req, res) {
     if (!result) {
         return console.log("Could not get current room");
     }
+    return result; 
 }
 
 async function roomLeave(req, res) {
@@ -32,6 +34,7 @@ async function roomLeave(req, res) {
     if (!result) {
         return console.log("Room not deleted?");
     }
+    return result; 
 }
 
 module.exports = {
