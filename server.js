@@ -31,41 +31,48 @@ app.use(morgan("dev"));
 
 // app.use(express.static(path.join(__dirname, 'view')));
 
-io.on("connection", socket => {
-    socket.on("joinRoom", ({ username, room }) => {
-        const newUser = userJoin(socket.id, username);
-        const user = getCurrentUser(socket.id);
-        const newRoom = roomJoin(socket.id, room);
-        const roomName = getRoom(socket.id);
+let messages = []; 
 
-        socket.join(newUser.username, newRoom.room);
+io.on("connection", socket => {
+    socket.on("joinRoom", async (username, room ) => {
+        const newUser = await userJoin(socket.id, username);
+        const user = await getCurrentUser(socket.id);
+        const newRoom = await roomJoin(socket.id, room);
+        const roomName = await getRoom(socket.id);
+
+        socket.join(newUser, newRoom);
         //socket.leave(room); 
 
-        socket.emit("message", formatMessage("Admin", "Welcome to THECHAT!"));
+        socket.emit("adminMsg", formatMessage("Admin", "Welcome to THECHAT!"));
 
-        socket.broadcast.to(roomName.room).emit("message", formatMessage("Admin", `${user.username} has joined the chat`));
+        socket.broadcast.to(roomName).emit("adminMsg", formatMessage("Admin", `${user.username} has joined the chat`));
 
-        io.to(roomName.room).emit("roomUsers", {
-            room: roomName.room,
-            users: getCurrentUser(socket.id)
+        io.to(roomName).emit("roomUsers", {
+            room: roomName,
+            users: await getCurrentUser(socket.id)
         });
     });
 
-    socket.on("chatMessage", (msg) => {
-        const user = getCurrentUser(socket.id);
-        const roomName = getRoom(socket.id);
+    socket.on("chatMessage", async (message) => {
+        const user = await getCurrentUser(socket.id);
+        const roomName = await getRoom(socket.id);
+
+        messages.push(message); 
         // const addMsg = newMsg(socket.id); 
-        io.to(roomName.room).emit("message", formatMessage(user.username, msg));
+        console.log(messages, " this is messages");
+        io.to(roomName).emit("message", messages);
+
+        // formatMessage(user, message)
     });
 
-    socket.on("disconnect", () => {
-        const user = userLeave(socket.id);
-        const roomName = getRoom(socket.id);
+    socket.on("disconnect", async () => {
+        const user = await userLeave(socket.id);
+        const roomName = await getRoom(socket.id);
         if (user) {
-            io.to(roomName.room).emit("message", formatMessage("Admin", `${user.username} has left the chat`));
-            io.to(roomName.room).emit("roomUsers", {
-                room: roomName.room,
-                users: getCurrentUser(socket.id)
+            io.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has left the chat`));
+            io.to(roomName).emit("roomUsers", {
+                room: roomName,
+                users: await getCurrentUser(socket.id)
             });
         }
     });
