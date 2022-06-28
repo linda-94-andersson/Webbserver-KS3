@@ -14,6 +14,21 @@ function createUser(id, username) {
     });
 }
 
+function getAllUsers() {
+    const sql = "SELECT * FROM users";
+
+    return new Promise((resolve, reject) => {
+        db.all(sql, (error, users) => {
+            if (error) {
+                console.error(error.message);
+                reject(error);
+            }
+            resolve(users);
+        })
+    })
+}
+
+
 function getOneUser(id) {
     const sql = "SELECT * FROM users WHERE id = ?";
 
@@ -44,6 +59,7 @@ function deleteUser(id) {
 
 module.exports = {
     createUser,
+    getAllUsers,
     getOneUser,
     deleteUser
 }
