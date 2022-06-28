@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const path = require("path");
+// const path = require("path");
 const http = require("http");
 const server = http.createServer(app);
 const cors = require("cors");
@@ -21,8 +21,8 @@ const io = new Server(server, {
 
 const logger = require("./middlewares/logger");
 const formatMessage = require("./utils/messages");
-const { userJoin, getCurrentUser, userLeave } = require("./controllers/users.controller");
-const { getRoom, roomJoin, roomLeave } = require("./controllers/rooms.controller");
+const { userJoin, getUsers, getCurrentUser, userLeave } = require("./controllers/users.controller");
+const { getRoom, getAllRooms, roomJoin, roomLeave } = require("./controllers/rooms.controller");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -31,33 +31,73 @@ app.use(morgan("dev"));
 
 // app.use(express.static(path.join(__dirname, 'view')));
 
-let messages = []; 
+let messages = [];
 
 io.on("connection", socket => {
-    socket.on("joinRoom", async (username, room ) => {
+    socket.on("createRoom", async (room) => {
+        const roomName = await getRoom(room);
+        const allRoom = await getAllRooms();
+
+        const checkRoom = allRoom.filter((check) => {
+            return check.room === room;
+        })
+        if (checkRoom.length) {
+            return console.log("Room already exist");
+        }
+        const newRoom = await roomJoin(room);
+
+        socket.emit("roomCreated", roomName);
+    });
+
+    socket.on("getAllRooms", async () => {
+        const allRooms = await getAllRooms();
+
+        socket.emit("Rooms", allRooms);
+    });
+
+    socket.on("joinRoom", async (room) => {
+        const user = await getCurrentUser(socket.id);
+        // const newRoom = await roomJoin(socket.id, room);
+        const roomName = await getRoom(socket.id);
+        socket.join(user, roomName);
+        socket.emit("joinedRoom", room);
+        //socket.leave(room); 
+        socket.emit("adminMsg", formatMessage("Admin", "Welcome to THECHAT!"));
+        socket.broadcast.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has joined the chat`));
+
+        // io.to(roomName).emit("roomUsers", {
+        //     room: roomName,
+        //     users: await getCurrentUser(socket.id)
+        // });
+    });
+
+    socket.on("createUser", async (username) => {
         const newUser = await userJoin(socket.id, username);
         const user = await getCurrentUser(socket.id);
-        const newRoom = await roomJoin(socket.id, room);
+
+        socket.emit("username", user);
+    });
+
+    socket.on("getAllUsers", async () => {
+        const allUsers = await getUsers();
+
+        socket.emit("Users", allUsers);
+    });
+
+    socket.on("deleteUser", async () => {
+        const user = await userLeave(socket.id);
         const roomName = await getRoom(socket.id);
 
-        socket.join(newUser, newRoom);
-        //socket.leave(room); 
+        io.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has left the chat`));
 
-        socket.emit("adminMsg", formatMessage("Admin", "Welcome to THECHAT!"));
-
-        socket.broadcast.to(roomName).emit("adminMsg", formatMessage("Admin", `${user.username} has joined the chat`));
-
-        io.to(roomName).emit("roomUsers", {
-            room: roomName,
-            users: await getCurrentUser(socket.id)
-        });
-    });
+        socket.emit("userLeft", user);
+    })
 
     socket.on("chatMessage", async (message) => {
         const user = await getCurrentUser(socket.id);
         const roomName = await getRoom(socket.id);
 
-        messages.push(message); 
+        messages.push(message);
         // const addMsg = newMsg(socket.id); 
         console.log(messages, " this is messages");
         io.to(roomName).emit("message", messages);
@@ -66,7 +106,7 @@ io.on("connection", socket => {
     });
 
     socket.on("disconnect", async () => {
-        const user = await userLeave(socket.id);
+        const user = await getCurrentUser(socket.id);
         const roomName = await getRoom(socket.id);
         if (user) {
             io.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has left the chat`));
@@ -76,7 +116,7 @@ io.on("connection", socket => {
             });
         }
     });
-    
+
     socket.on("error", (error) => {
         console.error(error, " this is io error");
     });
