@@ -1,31 +1,41 @@
 const roomModel = require("../models/rooms.model");
 
-async function roomJoin(req, res) {
+async function roomJoin(room) {
     //old way to send data
     // const myURL = new URLSearchParams(`?username=&room=${room}`);
     // const newRoom = myURL.get('room');
     // console.log(myURL, " this is room query");
     // console.log(newRoom, " this is newRoom");
 
-    if (!res) {
+    if (!room) {
         return console.log("There must be a room");
     }
     try {
-        const result = await roomModel.createRoom(req, res);
+        const result = await roomModel.createRoom(room);
         console.log(result, " this is roomJoin result");
-        return result; 
+        return result;
     } catch (error) {
+        console.error(error.message); 
         return console.log("Room could not be created");
     }
 }
 
-async function getRoom(req, res) {
-    const result = await roomModel.getOneRoom(req);
+async function getAllRooms(req, res) {
+    const result = await roomModel.getRooms();
+    console.log(result, " this is getAllRooms result");
+    if (!result) {
+        return console.log("Could not get all rooms");
+    }
+    return result;
+}
+
+async function getRoom(room) {
+    const result = await roomModel.getOneRoom(room);
     console.log(result, " this is getRoom result");
     if (!result) {
         return console.log("Could not get current room");
     }
-    return result; 
+    return result;
 }
 
 async function roomLeave(req, res) {
@@ -34,11 +44,12 @@ async function roomLeave(req, res) {
     if (!result) {
         return console.log("Room not deleted?");
     }
-    return result; 
+    return result;
 }
 
 module.exports = {
     roomJoin,
+    getAllRooms,
     getRoom,
     roomLeave
 }
