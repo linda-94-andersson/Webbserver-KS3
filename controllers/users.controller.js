@@ -18,6 +18,15 @@ async function userJoin(req, res) {
     }
 }
 
+async function getUsers(req, res) {
+    const result = await userModel.getAllUsers();
+    console.log(result, " this is getAllUsers result");
+    if (!result) {
+        return console.log("Could not get all users");
+    }
+    return result;
+}
+
 async function getCurrentUser(req, res) {
     const result = await userModel.getOneUser(req);
     console.log(result, " this is getCurrentUser result");
@@ -38,6 +47,7 @@ async function userLeave(req, res) {
 
 module.exports = {
     userJoin,
+    getUsers,
     getCurrentUser,
     userLeave
 }
