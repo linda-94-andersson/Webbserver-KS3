@@ -43,11 +43,11 @@ function getOneUser(id) {
     });
 }
 
-function deleteUser(id) {
-    const sql = "DELETE FROM users WHERE id = ?";
+function updateActiveRoom(roomName, username) {
+    const sql = "UPDATE users SET active_room = ? WHERE username = ?"
 
     return new Promise((resolve, reject) => {
-        db.run(sql, id, (error) => {
+        db.run(sql, [roomName, username], (error) => {
             if (error) {
                 console.error(error.message);
                 reject(error);
@@ -57,9 +57,39 @@ function deleteUser(id) {
     });
 }
 
+function getUserInRoom(roomName) {
+    const sql = "SELECT username FROM users WHERE active_room = ?";
+
+    return new Promise((resolve, reject) => {
+        db.all(sql, roomName, (error, user) => {
+            if (error) {
+                console.error(error.message);
+                reject(error);
+            }
+            resolve(user);
+        });
+    });
+}
+
+function deleteUser(id) {
+    const sql = "DELETE FROM users WHERE id = ?";
+
+    return new Promise((resolve, reject) => {
+        db.run(sql, id, (error) => {
+            if (error) {
+                console.error(error.message);
+                reject(error);
+            }
+            resolve(id);
+        });
+    });
+}
+
 module.exports = {
     createUser,
     getAllUsers,
     getOneUser,
+    updateActiveRoom,
+    getUserInRoom,
     deleteUser
 }

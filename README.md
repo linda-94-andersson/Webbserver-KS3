@@ -7,14 +7,14 @@
 
 * Backenden ska byggas med hjälp av Node och Socket.io (X)
 * Den ska ha en tillhörande frontend (X)
-* Den ska spara meddelande och rum långsiktigt, i en databas ()
+* Den ska spara meddelande och rum långsiktigt, i en databas (X)
 * Den ska ha stöd för flera chatt-rum (X)
-* Man ska kunna skapa och ta bort chattrum ()
+* Man ska kunna skapa och ta bort chattrum (X)
 * När man tar bort ett chattrum ska även dess meddelande tas bort ()
 * Chattrum som skapas ska ha unika namn (X)
-* Varje meddelande ska ha info om vem som skrev det och när (X)
+* Varje meddelande ska ha info om vem som skrev det och när ()
 * Den ska innehålla en middleware som sparar loggar med relevant info i en eller enskilda filer (tidsstämpel, vem som skrev det, i vilken kanal) (X)
-* Den ska validera meddelande på backenden så att en användare inte kan skicka ett tomt meddelande ()
+* Den ska validera meddelande på backenden så att en användare inte kan skicka ett tomt meddelande (X)
 
 ## För att uppnå Väl Godkänt är kraven att behöver du implementera minst 3 av följande kriterier:
 

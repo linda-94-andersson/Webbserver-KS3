@@ -10,34 +10,29 @@ const getActualRequestDurationInMilliseconds = start => {
     return (diff[0] * NS_PER_SEC + diff[1]) / NS_TO_MS;
 };
 
-function logger(req, res, next) {
+function logger(data) {
     const formatted_date = moment().format("YYYY-MM-DD HH:mm:ss");
 
     const start = process.hrtime();
     const durationInMilliseconds = getActualRequestDurationInMilliseconds(start);
 
-    res.on("finish", () => {
-        //How to target msg? why dose it work first and then not? 
-        const room = req.query.room; //params dosent work
-        const user = req.query.username;
-        const msg = req.body;
+    const fsData = JSON.stringify(data);
+    const room = data.roomName;
+    const user = data.username;
+    const msg = data.message;
 
-        const log = `
-        [${chalk.blue(formatted_date)}]
-        Room: ${room} - User: (${chalk.green(user)}): ${msg}
-        ${chalk.red(durationInMilliseconds.toLocaleString() + "ms")}
-        `;
+    const log = `
+    [${chalk.blue(formatted_date)}]
+    Room: ${room} - User: (${chalk.green(user)}): ${msg}
+    ${chalk.red(durationInMilliseconds.toLocaleString() + "ms")} `;
 
-        console.log(log);
+    console.log(log);
 
-        fs.appendFile("request_logs.txt", log + "\n", err => {
-            if (err) {
-                console.log(err);
-            }
-        });
+    fs.appendFile("request_logs.txt", fsData + log + "\n", err => {
+        if (err) {
+            console.log(err);
+        }
     });
-    console.log(req.query.username, req.query.room, " this is req.query in logger"); 
-    next();
 }
 
 module.exports = logger;

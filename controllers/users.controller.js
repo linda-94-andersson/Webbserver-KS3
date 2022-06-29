@@ -6,7 +6,7 @@ async function userJoin(id, username) {
     // const newUser = myURL.get('username');
     // console.log(newUser, " this is newUser");
 
-    if (!res) {
+    if (!username) {
         return console.log("There must be a user");
     }
     try {
@@ -33,7 +33,25 @@ async function getCurrentUser(id) {
     if (!result) {
         return console.log("Could not get current user");
     }
-    return result; 
+    return result;
+}
+
+async function updateRoom(roomName, username) {
+    const result = await userModel.updateActiveRoom(roomName, username);
+    console.log(result, " this is updateRoom result");
+    if (!result) {
+        return console.log("Could not update room");
+    }
+    return result;
+}
+
+async function getUinRoom(roomName) {
+    const result = await userModel.getUserInRoom(roomName);
+    console.log(result, " this is getUinRoom result");
+    if (!result) {
+        return console.log("Could not get users in room");
+    }
+    return result;
 }
 
 async function userLeave(id) {
@@ -42,12 +60,14 @@ async function userLeave(id) {
     if (!result) {
         return console.log("User could not leave :/");
     }
-    return result; 
+    return result;
 }
 
 module.exports = {
     userJoin,
     getUsers,
     getCurrentUser,
+    updateRoom,
+    getUinRoom,
     userLeave
 }

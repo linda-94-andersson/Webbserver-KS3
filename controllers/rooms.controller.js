@@ -38,8 +38,8 @@ async function getRoom(room) {
     return result;
 }
 
-async function roomLeave(id) {
-    const result = await roomModel.deleteRoom(id);
+async function roomLeave(room) {
+    const result = await roomModel.deleteRoom(room);
     console.log(result, " this is roomLeave result");
     if (!result) {
         return console.log("Room not deleted?");

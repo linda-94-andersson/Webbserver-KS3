@@ -5,33 +5,33 @@ CREATE TABLE IF NOT EXISTS rooms
 (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     room TEXT UNIQUE
-)
+);
 `;
 
 const usersStmt = `
 CREATE TABLE IF NOT EXISTS users
 (
     id TEXT PRIMARY KEY,
-    username TEXT 
-)
+    username TEXT UNIQUE,
+    active_room TEXT
+);
 `;
 
 const messagesStmt = `
 CREATE TABLE IF NOT EXISTS messages
 (
-    id TEXT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     message TEXT NOT NULL,
-    id_room INTEGER,
-    id_user INTEGER,
-    CONSTRAINT fk_id_room
-     FOREIGN KEY(id_room) 
-     REFERENCES rooms(id)
-     ON DELETE CASCADE,
-    CONSTRAINT fk_id_user
-     FOREIGN KEY(id_user)
-     REFERENCES users(id)
-     ON DELETE CASCADE
-)
+    id_room TEXT,
+    id_user TEXT,
+    username TEXT,
+    date TEXT,
+    FOREIGN KEY(id_room) 
+    REFERENCES rooms(room)
+    ON DELETE CASCADE,
+    FOREIGN KEY(id_user)
+    REFERENCES users(id)
+);
 `;
 
 const db = new sqlite3.Database("./db.sqlite", (error) => {
@@ -39,6 +39,9 @@ const db = new sqlite3.Database("./db.sqlite", (error) => {
         console.error(error.message);
         throw error;
     }
+    // db.exec("PRAGMA foreign_keys=ON", (err) => {
+    //     if (err) console.error(err.message);
+    // });
     db.run(roomsStmt, (error) => {
         if (error) {
             console.error(error.message);

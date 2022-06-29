@@ -41,16 +41,16 @@ function getOneRoom(room) {
     });
 }
 
-function deleteRoom(id) {
-    const sql = "DELETE FROM rooms WHERE id = ?";
+function deleteRoom(room) {
+    const sql = "DELETE FROM rooms WHERE room = ?";
 
     return new Promise((resolve, reject) => {
-        db.run(sql, id, (error) => {
+        db.run(sql, room, (error) => {
             if (error) {
                 console.error(error.message);
                 reject(error);
             }
-            resolve(id);
+            resolve(room);
         });
     });
 }
