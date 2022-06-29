@@ -1,6 +1,6 @@
 const userModel = require("../models/users.model");
 
-async function userJoin(req, res) {
+async function userJoin(id, username) {
     //old way to send data
     // const myURL = new URLSearchParams(`?username=${username}&room=`);
     // const newUser = myURL.get('username');
@@ -10,7 +10,7 @@ async function userJoin(req, res) {
         return console.log("There must be a user");
     }
     try {
-        const result = await userModel.createUser(req, res);
+        const result = await userModel.createUser(id, username);
         console.log(result, " this is userJoin result");
         return result;
     } catch (error) {
@@ -18,7 +18,7 @@ async function userJoin(req, res) {
     }
 }
 
-async function getUsers(req, res) {
+async function getUsers() {
     const result = await userModel.getAllUsers();
     console.log(result, " this is getAllUsers result");
     if (!result) {
@@ -27,8 +27,8 @@ async function getUsers(req, res) {
     return result;
 }
 
-async function getCurrentUser(req, res) {
-    const result = await userModel.getOneUser(req);
+async function getCurrentUser(id) {
+    const result = await userModel.getOneUser(id);
     console.log(result, " this is getCurrentUser result");
     if (!result) {
         return console.log("Could not get current user");
@@ -36,8 +36,8 @@ async function getCurrentUser(req, res) {
     return result; 
 }
 
-async function userLeave(req, res) {
-    const result = await userModel.deleteUser(req);
+async function userLeave(id) {
+    const result = await userModel.deleteUser(id);
     console.log(result, " this is userLeave result");
     if (!result) {
         return console.log("User could not leave :/");

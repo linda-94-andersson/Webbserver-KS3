@@ -20,7 +20,7 @@ async function roomJoin(room) {
     }
 }
 
-async function getAllRooms(req, res) {
+async function getAllRooms() {
     const result = await roomModel.getRooms();
     console.log(result, " this is getAllRooms result");
     if (!result) {
@@ -38,8 +38,8 @@ async function getRoom(room) {
     return result;
 }
 
-async function roomLeave(req, res) {
-    const result = await roomModel.deleteRoom(req);
+async function roomLeave(id) {
+    const result = await roomModel.deleteRoom(id);
     console.log(result, " this is roomLeave result");
     if (!result) {
         return console.log("Room not deleted?");
