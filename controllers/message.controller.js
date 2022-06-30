@@ -1,4 +1,5 @@
 const msgModel = require("../models/message.model");
+//console.logs(result) are only for dev and error handling
 
 async function createMsg(message) {
     if (!message) {
@@ -6,7 +7,7 @@ async function createMsg(message) {
     }
     try {
         const result = await msgModel.addMessage(message);
-        console.log(result, " this is createMsg result");
+        // console.log(result, " this is createMsg result");
         return result;
     } catch (error) {
         console.error(error.message);
@@ -16,7 +17,7 @@ async function createMsg(message) {
 
 async function getAllMsg(roomId) {
     const result = await msgModel.getMessages(roomId);
-    console.log(result, " this is getMessages result");
+    // console.log(result, " this is getMessages result");
     if (!result) {
         return console.log("Could not get all messages");
     }

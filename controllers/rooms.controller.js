@@ -1,18 +1,13 @@
 const roomModel = require("../models/rooms.model");
+//console.logs(result) are only for dev and error handling
 
 async function roomJoin(room) {
-    //old way to send data
-    // const myURL = new URLSearchParams(`?username=&room=${room}`);
-    // const newRoom = myURL.get('room');
-    // console.log(myURL, " this is room query");
-    // console.log(newRoom, " this is newRoom");
-
     if (!room) {
         return console.log("There must be a room");
     }
     try {
         const result = await roomModel.createRoom(room);
-        console.log(result, " this is roomJoin result");
+        // console.log(result, " this is roomJoin result");
         return result;
     } catch (error) {
         console.error(error.message); 
@@ -22,7 +17,7 @@ async function roomJoin(room) {
 
 async function getAllRooms() {
     const result = await roomModel.getRooms();
-    console.log(result, " this is getAllRooms result");
+    // console.log(result, " this is getAllRooms result");
     if (!result) {
         return console.log("Could not get all rooms");
     }
@@ -31,7 +26,7 @@ async function getAllRooms() {
 
 async function getRoom(room) {
     const result = await roomModel.getOneRoom(room);
-    console.log(result, " this is getRoom result");
+    // console.log(result, " this is getRoom result");
     if (!result) {
         return console.log("Could not get current room");
     }
@@ -40,7 +35,7 @@ async function getRoom(room) {
 
 async function roomLeave(room) {
     const result = await roomModel.deleteRoom(room);
-    console.log(result, " this is roomLeave result");
+    // console.log(result, " this is roomLeave result");
     if (!result) {
         return console.log("Room not deleted?");
     }
