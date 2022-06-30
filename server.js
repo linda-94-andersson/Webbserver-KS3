@@ -4,7 +4,6 @@ const http = require("http");
 const server = http.createServer(app);
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const morgan = require("morgan");
 const moment = require("moment");
 
 const { Server } = require("socket.io");
@@ -17,15 +16,14 @@ const io = new Server(server, {
 
 const logger = require("./middlewares/logger");
 const formatMessage = require("./utils/messages");
+
 const { userJoin, getUsers, getCurrentUser, userLeave, updateRoom, getUinRoom, } = require("./controllers/users.controller");
 const { getRoom, getAllRooms, roomJoin, roomLeave } = require("./controllers/rooms.controller");
 const { createMsg, getAllMsg } = require("./controllers/message.controller");
-const { getAllUsers } = require("./models/users.model");
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(logger);
-app.use(morgan("dev"));
 
 io.use((socket, next) => {
     socket.on("chatMessage", (data) => {
@@ -58,15 +56,17 @@ io.on("connection", socket => {
     socket.on("joinRoom", async ({room, username }) => {
         // const user = await getCurrentUser(socket.id);
         // const roomName = await getRoom(room);
+
         console.log(room, " this is room in joinRoom");
         socket.join(room);
         socket.emit("joinedRoom", room);
         // socket.emit("adminMsg", formatMessage("Admin", "Welcome to THECHAT!"));
         // socket.broadcast.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has joined the chat`));
+    });
 
+    socket.on("getActiveUsers", async ({room, username}) => {
         await updateRoom(room, username);
         const activeUsers = await getUinRoom(room);
- 
         socket.emit("usersActive", activeUsers);
     });
 
@@ -82,7 +82,7 @@ io.on("connection", socket => {
     });
 
     socket.on("createUser", async (username) => {
-        const allUsers = await getAllUsers();
+        const allUsers = await getUsers();
 
         const checkUser = allUsers.filter((check) => {
             return check.username === username;
@@ -108,7 +108,7 @@ io.on("connection", socket => {
         // const roomName = await getRoom(); //room?
 
         // io.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has left the chat`));
-
+        // socket.leave(room); //sätta upp room? 
         socket.emit("userLeft", user);
     });
 
