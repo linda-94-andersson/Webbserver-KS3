@@ -35,13 +35,15 @@ io.use((socket, next) => {
 });
 
 io.on("connection", socket => {
+    console.log(`User ${socket.id} has connected to server`);
+
     socket.on("createRoom", async (room) => {
         const allRoom = await getAllRooms();
 
-        const checkRoom = allRoom.filter((check) => {
+        const checkRoom = await allRoom.filter((check) => {
             return check.room === room;
         })
-        if (checkRoom.length) {
+        if (checkRoom.length !== 0) {
             return console.log("Room already exist");
         }
         const newRoom = await roomJoin(room);
@@ -52,10 +54,18 @@ io.on("connection", socket => {
     socket.on("getAllRooms", async () => {
         const allRooms = await getAllRooms();
 
-        socket.emit("rooms", allRooms);
+        io.emit("rooms", allRooms);
     });
 
     socket.on("joinRoom", async ({ room, username }) => {
+        const allUsers = await getUsers();
+        const checkUser = await allUsers.filter((check) => {
+            return check.username === username;
+        });
+        if (checkUser.length !== 0) {
+            socket.emit("username", "error");
+            return console.log("User already exist when join room");
+        }
         socket.join(room);
 
         socket.emit("joinedRoom", room);
@@ -65,7 +75,7 @@ io.on("connection", socket => {
         await updateRoom(room, username);
         const activeUsers = await getUinRoom(room);
 
-        socket.emit("usersActive", activeUsers);
+        io.to(room).emit("usersActive", activeUsers);
     });
 
     socket.on("deleteRoom", async (room) => {
@@ -79,12 +89,12 @@ io.on("connection", socket => {
     socket.on("createUser", async (username) => {
         const allUsers = await getUsers();
 
-        const checkUser = allUsers.filter((check) => {
+        const checkUser = await allUsers.filter((check) => {
             return check.username === username;
         });
-        if (checkUser.length) {
+        if (checkUser.length !== 0) {
             socket.emit("username", "error");
-            return console.log("User already exist");
+            return console.log("User already exist when create");
         }
         const newUser = await userJoin(socket.id, username);
 
@@ -100,7 +110,6 @@ io.on("connection", socket => {
 
     socket.on("deleteUser", async () => {
         const user = await userLeave(socket.id);
-        // socket.leave(room); //sätta upp room? 
 
         socket.emit("userLeft", user);
     });
@@ -111,7 +120,7 @@ io.on("connection", socket => {
         }
 
         const getBefore = await getAllMsg(data.roomName);
-        socket.emit("getAllMessages", getBefore);
+        io.to(data.roomName).emit("getAllMessages", getBefore);
 
         if (!data.message) {
             return console.log("Will not create empty messages");
@@ -125,7 +134,7 @@ io.on("connection", socket => {
         }
         await createMsg(newMsg);
         const roomMessages = await getAllMsg(data.roomName);
-        socket.emit("sentMessage", roomMessages);
+        io.to(data.roomName).emit("sentMessage", roomMessages);
     });
 
     socket.on("handle_typing", ({ typing, username, room }) => {
