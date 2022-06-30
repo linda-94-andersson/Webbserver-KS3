@@ -43,25 +43,25 @@ function getOneUser(id) {
     });
 }
 
-function updateActiveRoom(roomName, username) {
+function updateActiveRoom(room, username) {
     const sql = "UPDATE users SET active_room = ? WHERE username = ?"
 
     return new Promise((resolve, reject) => {
-        db.run(sql, [roomName, username], (error) => {
+        db.run(sql, [room, username], (error, user) => {
             if (error) {
                 console.error(error.message);
                 reject(error);
             }
-            resolve();
+            resolve(user);
         });
     });
 }
 
-function getUserInRoom(roomName) {
-    const sql = "SELECT username FROM users WHERE active_room = ?";
+function getUserInRoom(room) {
+    const sql = "SELECT username, active_room FROM users WHERE active_room = ?";
 
     return new Promise((resolve, reject) => {
-        db.all(sql, roomName, (error, user) => {
+        db.all(sql, room, (error, user) => {
             if (error) {
                 console.error(error.message);
                 reject(error);
