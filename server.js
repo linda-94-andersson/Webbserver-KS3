@@ -78,8 +78,8 @@ io.on("connection", socket => {
         socket.leave(room);
 
         // await deleteMessages(roomName);
-		// const updatedRooms = await getAllRooms();
-		// io.emit("deleted_room", updatedRooms);
+        // const updatedRooms = await getAllRooms();
+        // io.emit("deleted_room", updatedRooms);
 
         socket.emit("roomDeleted", room);
     });
@@ -136,6 +136,10 @@ io.on("connection", socket => {
         await createMsg(newMsg);
         const roomMessages = await getAllMsg(data.roomName);
         socket.emit("sentMessage", roomMessages);
+    });
+
+    socket.on("handle_typing", ({ typing, username, room }) => {
+        socket.to(room).emit("is_typing", { typing, username });
     });
 
     socket.on("disconnect", async (room) => {

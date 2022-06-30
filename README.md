@@ -19,8 +19,8 @@
 ## För att uppnå Väl Godkänt är kraven att behöver du implementera minst 3 av följande kriterier:
 
 * Klienten ska visa alla användare som är aktiva i chatten/rummet (X)
-* När någon skriver ska det finnas någon form av indikator att någon håller på att skriva ett meddelande (ex. “... skriver just nu”) ()
+* När någon skriver ska det finnas någon form av indikator att någon håller på att skriva ett meddelande (ex. “... skriver just nu”) (X)
 * Det ska finnas stöd för att skapa ett låst rum som kräver lösenord ()
 * Man ska inte kunna ta bort ett lösenordsskyddat rum utan lösenordet ()
 * Det ska finnas stöd för att skicka direktmeddelande till andra användare ()
-* Det ska finnas stöd för att skicka emojis i meddelanden ()
+* Det ska finnas stöd för att skicka emojis i meddelanden (X)
