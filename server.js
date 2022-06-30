@@ -57,7 +57,6 @@ io.on("connection", socket => {
         // const user = await getCurrentUser(socket.id);
         // const roomName = await getRoom(room);
 
-        console.log(room, " this is room in joinRoom");
         socket.join(room);
         socket.emit("joinedRoom", room);
         // socket.emit("adminMsg", formatMessage("Admin", "Welcome to THECHAT!"));
@@ -71,12 +70,8 @@ io.on("connection", socket => {
     });
 
     socket.on("deleteRoom", async (room) => {
-        // const user = await getCurrentUser(socket.id);
         await roomLeave(room);
         socket.leave(room);
-        // const roomName = await getRoom(room);
-
-        // io.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has left the chat`));
 
         socket.emit("roomDeleted", room);
     });
@@ -106,18 +101,17 @@ io.on("connection", socket => {
     socket.on("deleteUser", async () => {
         const user = await userLeave(socket.id);
         // const roomName = await getRoom(); //room?
+        // socket.leave(room); //sätta upp room? 
 
         // io.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has left the chat`));
-        // socket.leave(room); //sätta upp room? 
         socket.emit("userLeft", user);
     });
 
     socket.on("chatMessage", async (data) => {
-        if (!data.message.length) {
+        if (!data.message) {
             return console.log("Will not create empty messages");
         }
-        if (!data.roomName.length) {
-            console.log(data.roomName, " this is data.roomName");
+        if (!data.roomName) {
             return console.log("Must be a room with message");
         }
         const newMsg = {
