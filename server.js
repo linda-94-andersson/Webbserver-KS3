@@ -15,7 +15,6 @@ const io = new Server(server, {
 });
 
 const logger = require("./middlewares/logger");
-const formatMessage = require("./utils/messages");
 
 const { userJoin, getUsers, getCurrentUser, userLeave, updateRoom, getUinRoom, } = require("./controllers/users.controller");
 const { getRoom, getAllRooms, roomJoin, roomLeave } = require("./controllers/rooms.controller");
@@ -57,18 +56,15 @@ io.on("connection", socket => {
     });
 
     socket.on("joinRoom", async ({ room, username }) => {
-        // const user = await getCurrentUser(socket.id);
-        // const roomName = await getRoom(room);
-
         socket.join(room);
+
         socket.emit("joinedRoom", room);
-        // socket.emit("adminMsg", formatMessage("Admin", "Welcome to THECHAT!"));
-        // socket.broadcast.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has joined the chat`));
     });
 
     socket.on("getActiveUsers", async ({ room, username }) => {
         await updateRoom(room, username);
         const activeUsers = await getUinRoom(room);
+
         socket.emit("usersActive", activeUsers);
     });
 
@@ -76,10 +72,6 @@ io.on("connection", socket => {
         await deleteMessages(room);
         await roomLeave(room);
         socket.leave(room);
-
-        // await deleteMessages(roomName);
-        // const updatedRooms = await getAllRooms();
-        // io.emit("deleted_room", updatedRooms);
 
         socket.emit("roomDeleted", room);
     });
@@ -108,10 +100,8 @@ io.on("connection", socket => {
 
     socket.on("deleteUser", async () => {
         const user = await userLeave(socket.id);
-        // const roomName = await getRoom(); //room?
         // socket.leave(room); //sätta upp room? 
 
-        // io.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has left the chat`));
         socket.emit("userLeft", user);
     });
 
@@ -142,12 +132,8 @@ io.on("connection", socket => {
         socket.to(room).emit("is_typing", { typing, username });
     });
 
-    socket.on("disconnect", async (room) => {
-        const user = await getCurrentUser(socket.id);
-        const roomName = await getRoom(room);
-        if (user) {
-            io.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has left the chat`));
-        }
+    socket.on("disconnect", (reason) => {
+        console.log(`Server disconnected. Reason ${reason}`);
     });
 
     socket.on("error", (error) => {
