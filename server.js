@@ -19,7 +19,7 @@ const formatMessage = require("./utils/messages");
 
 const { userJoin, getUsers, getCurrentUser, userLeave, updateRoom, getUinRoom, } = require("./controllers/users.controller");
 const { getRoom, getAllRooms, roomJoin, roomLeave } = require("./controllers/rooms.controller");
-const { createMsg, getAllMsg } = require("./controllers/message.controller");
+const { createMsg, getAllMsg, deleteMessages } = require("./controllers/message.controller");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -27,6 +27,9 @@ app.use(logger);
 
 io.use((socket, next) => {
     socket.on("chatMessage", (data) => {
+        if (!data.message) {
+            return console.log("Nothign to logg");
+        }
         logger(data);
     });
     next();
@@ -53,7 +56,7 @@ io.on("connection", socket => {
         socket.emit("rooms", allRooms);
     });
 
-    socket.on("joinRoom", async ({room, username }) => {
+    socket.on("joinRoom", async ({ room, username }) => {
         // const user = await getCurrentUser(socket.id);
         // const roomName = await getRoom(room);
 
@@ -63,15 +66,20 @@ io.on("connection", socket => {
         // socket.broadcast.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has joined the chat`));
     });
 
-    socket.on("getActiveUsers", async ({room, username}) => {
+    socket.on("getActiveUsers", async ({ room, username }) => {
         await updateRoom(room, username);
         const activeUsers = await getUinRoom(room);
         socket.emit("usersActive", activeUsers);
     });
 
     socket.on("deleteRoom", async (room) => {
+        await deleteMessages(room);
         await roomLeave(room);
         socket.leave(room);
+
+        // await deleteMessages(roomName);
+		// const updatedRooms = await getAllRooms();
+		// io.emit("deleted_room", updatedRooms);
 
         socket.emit("roomDeleted", room);
     });
@@ -108,27 +116,31 @@ io.on("connection", socket => {
     });
 
     socket.on("chatMessage", async (data) => {
-        if (!data.message) {
-            return console.log("Will not create empty messages");
-        }
         if (!data.roomName) {
             return console.log("Must be a room with message");
         }
+
+        const getBefore = await getAllMsg(data.roomName);
+        socket.emit("getAllMessages", getBefore);
+
+        if (!data.message) {
+            return console.log("Will not create empty messages");
+        }
         const newMsg = {
             message: data.message,
-            id_room: data.roomName,
+            room_name: data.roomName,
             id_user: socket.id,
             username: data.username,
             date: moment().format("HH:mm"),
         }
         await createMsg(newMsg);
         const roomMessages = await getAllMsg(data.roomName);
-        io.to(data.roomName).emit("sentMessage", roomMessages);
+        socket.emit("sentMessage", roomMessages);
     });
 
     socket.on("disconnect", async (room) => {
         const user = await getCurrentUser(socket.id);
-        const roomName = await getRoom(room); 
+        const roomName = await getRoom(room);
         if (user) {
             io.to(roomName).emit("adminMsg", formatMessage("Admin", `${user} has left the chat`));
         }

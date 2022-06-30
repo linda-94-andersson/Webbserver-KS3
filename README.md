@@ -10,7 +10,7 @@
 * Den ska spara meddelande och rum långsiktigt, i en databas (X)
 * Den ska ha stöd för flera chatt-rum (X)
 * Man ska kunna skapa och ta bort chattrum (X)
-* När man tar bort ett chattrum ska även dess meddelande tas bort ()
+* När man tar bort ett chattrum ska även dess meddelande tas bort (X)
 * Chattrum som skapas ska ha unika namn (X)
 * Varje meddelande ska ha info om vem som skrev det och när (X)
 * Den ska innehålla en middleware som sparar loggar med relevant info i en eller enskilda filer (tidsstämpel, vem som skrev det, i vilken kanal) (X)

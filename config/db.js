@@ -22,26 +22,18 @@ CREATE TABLE IF NOT EXISTS messages
 (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     message TEXT NOT NULL,
-    id_room TEXT,
+    room_name TEXT,
     id_user TEXT,
     username TEXT,
-    date TEXT,
-    FOREIGN KEY(id_room) 
-    REFERENCES rooms(room)
-    ON DELETE CASCADE,
-    FOREIGN KEY(id_user)
-    REFERENCES users(id)
+    date TEXT
 );
 `;
 
-const db = new sqlite3.Database("./db.sqlite", (error) => {
+const db = new sqlite3.Database("./db.sqlite", async (error) => {
     if (error) {
         console.error(error.message);
         throw error;
     }
-    // db.exec("PRAGMA foreign_keys=ON", (err) => {
-    //     if (err) console.error(err.message);
-    // });
     db.run(roomsStmt, (error) => {
         if (error) {
             console.error(error.message);

@@ -11,6 +11,7 @@ async function createMsg(message) {
         return result;
     } catch (error) {
         console.error(error.message);
+        throw error;
         return console.log("Message could not be created");
     }
 }
@@ -24,7 +25,17 @@ async function getAllMsg(roomId) {
     return result;
 }
 
+async function deleteMessages(roomId) {
+    const result = await msgModel.deleteMsg(roomId);
+    // console.log(result, " this is dleteMsg result");
+    if (!roomId) {
+        return console.log("No Id found");
+    }
+    return result;
+}
+
 module.exports = {
     createMsg,
-    getAllMsg
+    getAllMsg,
+    deleteMessages
 }
