@@ -151,6 +151,10 @@ io.on("connection", socket => {
 });
 
 
-const PORT = 5000 || process.env.PORT;
+// const PORT = 5000 || process.env.PORT;
 
-server.listen(PORT, () => console.log(`Server runing on port http://localhost:${PORT}/`));
+const PORT = process.env.PORT;
+
+// server.listen(PORT, () => console.log(`Server runing on port http://localhost:${PORT}/`));
+
+server.listen(PORT, () => console.log(`Server runing on port ${PORT}`));
