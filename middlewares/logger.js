@@ -16,7 +16,7 @@ function logger(data) {
     const start = process.hrtime();
     const durationInMilliseconds = getActualRequestDurationInMilliseconds(start);
 
-    // const fsData = JSON.stringify(data);
+    // const fsData = JSON.stringify(data); strinfy crashes heroku, only use data raw
     const room = data.roomName;
     const user = data.username;
     const msg = data.message;
