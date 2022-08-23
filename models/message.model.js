@@ -1,44 +1,36 @@
 const db = require("../config/db");
 
 function addMessage({ message, room_name, id_user, username, date }) {
-    const sql = "INSERT INTO messages (message, room_name, id_user, username, date) VALUES (?,?,?,?,?)";
+    const sql = "INSERT INTO messages (message, room_name, id_user, username, date) VALUES ($1,$2,$3,$4,$5)";
 
-    return new Promise((resolve, reject) => {
-        db.run(sql, [message, room_name, id_user, username, date], (error) => {
-            if (error) {
-                console.error(error.message);
-                reject(error);
-            }
-            resolve();
-        });
+    return db.query(sql, [message, room_name, id_user, username, date], function (error) {
+        if (error) {
+            console.error(error.message);
+        }
+        return;
     });
 }
 
 function getMessages(roomId) {
     const sql = "SELECT * FROM messages WHERE room_name = ?";
 
-    return new Promise((resolve, reject) => {
-        db.all(sql, roomId, (error, room) => {
-            if (error) {
-                console.error(error.message);
-                reject(error);
-            }
-            resolve(room);
-        })
-    })
+    return db.query(sql, roomId, function (error, room) {
+        if (error) {
+            console.error(error.message);
+        }
+        return room;
+    });
 }
 
 function deleteMsg(roomId) {
-	const sql = "DELETE FROM messages WHERE room_name = ?";
-	return new Promise((resolve, reject) => {
-		db.run(sql, roomId, (error, room) => {
-			if (error) {
-				console.error(error.message);
-				reject(error);
-			}
-			resolve(room);
-		});
-	});
+    const sql = "DELETE FROM messages WHERE room_name = ?";
+
+    return db.query(sql, roomId, function (error, room) {
+        if (error) {
+            console.error(error.message);
+        }
+        return room;
+    });
 }
 
 
