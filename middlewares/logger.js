@@ -16,7 +16,7 @@ function logger(data) {
     const start = process.hrtime();
     const durationInMilliseconds = getActualRequestDurationInMilliseconds(start);
 
-    const fsData = JSON.stringify(data);
+    // const fsData = JSON.stringify(data);
     const room = data.roomName;
     const user = data.username;
     const msg = data.message;
@@ -28,7 +28,7 @@ function logger(data) {
 
     console.log(log);
 
-    fs.appendFile("request_logs.txt", fsData + log + "\n", err => {
+    fs.appendFile("request_logs.txt", data + log + "\n", err => {
         if (err) {
             console.log(err);
         }

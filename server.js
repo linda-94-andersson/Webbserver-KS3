@@ -3,7 +3,7 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const cors = require("cors");
-// const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const moment = require("moment");
 
 const { Server } = require("socket.io");
@@ -21,7 +21,7 @@ const { getRoom, getAllRooms, roomJoin, roomLeave } = require("./controllers/roo
 const { createMsg, getAllMsg, deleteMessages } = require("./controllers/message.controller");
 
 app.use(cors());
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(logger);
 
 io.use((socket, next) => {
