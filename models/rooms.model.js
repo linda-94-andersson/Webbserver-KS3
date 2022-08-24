@@ -7,18 +7,18 @@ function createRoom(room) {
         if (error) {
             console.error(error.message);
         }
-        return room;
+        return room.rows;
     });
 }
 
 function getRooms() {
     const sql = "SELECT * FROM rooms";
 
-    return db.query(sql, function (error, rooms) {
+    return db.query(sql, function (error, result) {
         if (error) {
             console.error(error.message);
         }
-        return rooms;
+        return result.rows;
     });
 }
 
@@ -29,7 +29,7 @@ function getOneRoom(room) {
         if (error) {
             console.error(error.message);
         }
-        return room;
+        return room.rows;
     });
 }
 
@@ -40,7 +40,7 @@ function deleteRoom(room) {
         if (error) {
             console.error(error.message);
         }
-        return room;
+        return room.rows;
     });
 }
 

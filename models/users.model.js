@@ -3,22 +3,22 @@ const db = require("../config/db");
 function createUser(id, username) {
     const sql = "INSERT INTO users (id, username) VALUES ($1,$2)";
 
-    return db.query(sql, [id, username], function (error, user) {
+    return db.query(sql, [id, username], function (error, result) {
         if (error) {
             console.error(error.message);
         }
-        return user;
+        return result.rows;
     });
 }
 
 function getAllUsers() {
     const sql = "SELECT * FROM users";
 
-    return db.query(sql, function (error, users) {
+    return db.query(sql, function (error, result) {
         if (error) {
             console.error(error.message);
         }
-        return users;
+        return result.rows;
     });
 }
 
@@ -26,33 +26,33 @@ function getAllUsers() {
 function getOneUser(id) {
     const sql = "SELECT * FROM users WHERE id = ?";
 
-    return db.query(sql, id, function (error, user) {
+    return db.query(sql, id, function (error, result) {
         if (error) {
             console.error(error.message);
         }
-        return user;
+        return result.rows;
     });
 }
 
 function updateActiveRoom(room, username) {
     const sql = "UPDATE users SET active_room = ? WHERE username = ?"
 
-    return db.query(sql, [room, username], function (error, user) {
+    return db.query(sql, [room, username], function (error, result) {
         if (error) {
             console.error(error.message);
         }
-        return user;
+        return result.rows;
     });
 }
 
 function getUserInRoom(room) {
     const sql = "SELECT username, active_room FROM users WHERE active_room = ?";
 
-    return db.query(sql, room, function (error, user) {
+    return db.query(sql, room, function (error, result) {
         if (error) {
             console.error(error.message);
         }
-        return user;
+        return result.rows;
     });
 }
 
@@ -63,7 +63,7 @@ function deleteUser(id) {
         if (error) {
             console.error(error.message);
         }
-        return id;
+        return id.rows;
     });
 }
 
