@@ -18,7 +18,7 @@ async function getAllUsers() {
 
 
 async function getOneUser(id) {
-    const sql = "SELECT * FROM users WHERE id = ?";
+    const sql = "SELECT * FROM users WHERE id = $1";
 
     const result = await db.query(sql, [id]);
 
@@ -26,7 +26,7 @@ async function getOneUser(id) {
 }
 
 async function updateActiveRoom(room, username) {
-    const sql = "UPDATE users SET active_room = ? WHERE username = ?"
+    const sql = "UPDATE users SET active_room = $1 WHERE username = $2"
 
     const result = await db.query(sql, [room, username]);
 
@@ -34,15 +34,15 @@ async function updateActiveRoom(room, username) {
 }
 
 async function getUserInRoom(room) {
-    const sql = "SELECT username, active_room FROM users WHERE active_room = ?";
+    const sql = "SELECT username, active_room FROM users WHERE active_room = $1";
 
     const result = await db.query(sql, [room]);
 
-    return result.rows[0];
+    return result.rows;
 }
 
 async function deleteUser(id) {
-    const sql = "DELETE FROM users WHERE id = ?";
+    const sql = "DELETE FROM users WHERE id = $1";
 
     const result = await db.query(sql, [id]);
 

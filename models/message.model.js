@@ -5,11 +5,13 @@ async function addMessage({ message, room_name, id_user, username, date }) {
 
     const result = await db.query(sql, [message, room_name, id_user, username, date]);
 
+    console.log(message, room_name, id_user, username, date, " this is all from addMessage");
+
     return result.rows[0];
 }
 
 async function getMessages(roomId) {
-    const sql = "SELECT * FROM messages WHERE room_name = ?";
+    const sql = "SELECT * FROM messages WHERE room_name = $1";
 
     const result = await db.query(sql, [roomId]);
 
@@ -17,7 +19,7 @@ async function getMessages(roomId) {
 }
 
 async function deleteMsg(roomId) {
-    const sql = "DELETE FROM messages WHERE room_name = ?";
+    const sql = "DELETE FROM messages WHERE room_name = $1";
 
     const result = await db.query(sql, [roomId]);
 
