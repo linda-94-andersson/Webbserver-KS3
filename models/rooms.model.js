@@ -1,47 +1,35 @@
 const db = require("../config/db");
 
-function createRoom(room) {
+async function createRoom(room) {
     const sql = "INSERT INTO rooms (room) VALUES ($1)";
 
-    return db.query(sql, room, function (error) {
-        if (error) {
-            console.error(error.message);
-        }
-        return room.rows;
-    });
+    const result = await db.query(sql, room);
+
+    return result.rows[0];
 }
 
-function getRooms() {
+async function getRooms() {
     const sql = "SELECT * FROM rooms";
 
-    return db.query(sql, function (error, result) {
-        if (error) {
-            console.error(error.message);
-        }
-        return result.rows;
-    });
+    const result = await db.query(sql);
+
+    return result.rows;
 }
 
-function getOneRoom(room) {
+async function getOneRoom(room) {
     const sql = "SELECT * FROM rooms WHERE room = ?";
 
-    return db.query(sql, room, function (error) {
-        if (error) {
-            console.error(error.message);
-        }
-        return room.rows;
-    });
+    const result = await db.query(sql, room);
+
+    return result.rows[0];
 }
 
-function deleteRoom(room) {
+async function deleteRoom(room) {
     const sql = "DELETE FROM rooms WHERE room = ?";
 
-    return db.query(sql, room, function (error) {
-        if (error) {
-            console.error(error.message);
-        }
-        return room.rows;
-    });
+    const result = await db.query(sql, room);
+
+    return result.rows[0];
 }
 
 module.exports = {
