@@ -5,8 +5,6 @@ async function addMessage({ message, room_name, id_user, username, date }) {
 
     const result = await db.query(sql, [message, room_name, id_user, username, date]);
 
-    console.log(message, room_name, id_user, username, date, " this is all from addMessage");
-
     return result.rows[0];
 }
 
