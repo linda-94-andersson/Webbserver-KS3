@@ -20,7 +20,7 @@ async function getAllUsers() {
 async function getOneUser(id) {
     const sql = "SELECT * FROM users WHERE id = ?";
 
-    const result = await db.query(sql, id);
+    const result = await db.query(sql, [id]);
 
     return result.rows[0];
 }
@@ -36,7 +36,7 @@ async function updateActiveRoom(room, username) {
 async function getUserInRoom(room) {
     const sql = "SELECT username, active_room FROM users WHERE active_room = ?";
 
-    const result = await db.query(sql, room);
+    const result = await db.query(sql, [room]);
 
     return result.rows[0];
 }
@@ -44,7 +44,7 @@ async function getUserInRoom(room) {
 async function deleteUser(id) {
     const sql = "DELETE FROM users WHERE id = ?";
 
-    const result = await db.query(sql, id);
+    const result = await db.query(sql, [id]);
 
     return result.rows[0];
 }
