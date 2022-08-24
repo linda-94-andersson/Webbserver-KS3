@@ -40,7 +40,7 @@ io.on("connection", socket => {
     socket.on("createRoom", async (room) => {
         const allRoom = await getAllRooms();
 
-        const checkRoom = await allRoom.filter((check) => {
+        const checkRoom = await allRoom?.filter((check) => {
             return check.room === room;
         })
         if (checkRoom.length !== 0) {
@@ -59,7 +59,7 @@ io.on("connection", socket => {
 
     socket.on("joinRoom", async ({ room, username }) => {
         const allUsers = await getUsers();
-        const checkUser = await allUsers.filter((check) => {
+        const checkUser = await allUsers?.filter((check) => {
             return check.username === username;
         });
         if (checkUser.length !== 0) {
@@ -89,7 +89,7 @@ io.on("connection", socket => {
     socket.on("createUser", async (username) => {
         const allUsers = await getUsers();
 
-        const checkUser = await allUsers.filter((check) => {
+        const checkUser = await allUsers?.filter((check) => {
             return check.username === username;
         });
         if (checkUser.length !== 0) {
