@@ -38,7 +38,7 @@ async function getUserInRoom(room) {
 
     const result = await db.query(sql, [room]);
 
-    return result.rows;
+    return result.rows[0];
 }
 
 async function deleteUser(id) {
