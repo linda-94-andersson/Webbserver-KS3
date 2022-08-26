@@ -1,8 +1,8 @@
 ## Deployment
-* http://localhost:5000/
+* https://webbpublicering-ks-backend.herokuapp.com/ - After the 28th of november 2022 free Heroku will be shut down and the deployment will be shut down
 
 ## Frontend - Deployment
-* WORK IN PROGRESS
+* https://webbpublicering-ks-frontend.herokuapp.com/ from https://github.com/linda-94-andersson/Webbserver-KS3-Frontend
 
 ## Skills used for this project
 * JavaScript
@@ -12,6 +12,8 @@
 * env. 
 * SQlite 3
 * API 
+* Postgres
+* Heroku
 
 ## Requirements
 
